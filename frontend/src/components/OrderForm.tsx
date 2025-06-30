@@ -1,3 +1,4 @@
+'use client';
 
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,9 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Separator } from '@/components/ui/separator';
-import { Package, MapPin, Phone, User, Clock, FileText } from 'lucide-react';
+import { Package, MapPin, Phone, User, Clock } from 'lucide-react';
 import { calculatePrice, priceRanges } from '@/utils/priceCalculator';
-import { Order } from '@/types/order';
 import { toast } from '@/hooks/use-toast';
 
 const OrderForm = () => {
@@ -37,11 +37,13 @@ const OrderForm = () => {
 
   const calculatedPrice = calculatePrice(formData.distance, formData.isUrgent);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!formData.firstName || !formData.lastName || !formData.phoneNumber || 
-        !formData.packageName || !formData.pickupAddress || !formData.deliveryAddress) {
+
+    if (
+      !formData.firstName || !formData.lastName || !formData.phoneNumber ||
+      !formData.packageName || !formData.pickupAddress || !formData.deliveryAddress
+    ) {
       toast({
         title: "Xəta",
         description: "Zəhmət olmasa bütün məcburi sahələri doldurun",
@@ -50,56 +52,51 @@ const OrderForm = () => {
       return;
     }
 
-    const newOrder: Order = {
-      id: `AZ${Date.now()}`,
-      customer: {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        phoneNumber: formData.phoneNumber
-      },
-      package: {
-        name: formData.packageName,
-        code: formData.packageCode,
-        size: formData.packageSize
-      },
-      addresses: {
-        pickup: formData.pickupAddress,
-        delivery: formData.deliveryAddress
-      },
-      distance: formData.distance,
-      price: calculatedPrice,
-      isUrgent: formData.isUrgent,
-      deliveryTime: formData.deliveryTime,
-      notes: formData.notes,
-      status: 'new',
-      createdAt: new Date()
-    };
+    try {
+      const res = await fetch('http://localhost:3000/order/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...formData,
+          price: calculatedPrice,
+        }),
+      });
 
-    // Sifarişi localStorage-da saxlayırıq (real layihədə API istifadə edilər)
-    const existingOrders = JSON.parse(localStorage.getItem('orders') || '[]');
-    existingOrders.push(newOrder);
-    localStorage.setItem('orders', JSON.stringify(existingOrders));
+      if (!res.ok) {
+        throw new Error('Sifariş göndərilə bilmədi');
+      }
 
-    toast({
-      title: "Uğurlu!",
-      description: `Sifarişiniz qəbul edildi. Sifariş nömrəsi: ${newOrder.id}`
-    });
+      const data = await res.json();
 
-    // Formu təmizləyirik
-    setFormData({
-      firstName: '',
-      lastName: '',
-      phoneNumber: '',
-      packageName: '',
-      packageCode: '',
-      packageSize: '',
-      pickupAddress: '',
-      deliveryAddress: '',
-      distance: 0,
-      isUrgent: false,
-      deliveryTime: '',
-      notes: ''
-    });
+      toast({
+        title: "Uğurlu!",
+        description: `Sifarişiniz qəbul edildi. Sifariş nömrəsi: ${data.orderId || data._id}`,
+      });
+
+      setFormData({
+        firstName: '',
+        lastName: '',
+        phoneNumber: '',
+        packageName: '',
+        packageCode: '',
+        packageSize: '',
+        pickupAddress: '',
+        deliveryAddress: '',
+        distance: 0,
+        isUrgent: false,
+        deliveryTime: '',
+        notes: ''
+      });
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Xəta",
+        description: "Sifariş göndərilərkən problem yarandı",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
@@ -111,7 +108,6 @@ const OrderForm = () => {
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
-          {/* Sifariş Formu */}
           <div className="md:col-span-2">
             <Card className="shadow-lg">
               <CardHeader className="bg-blue-600 text-white rounded-t-lg">
@@ -265,7 +261,7 @@ const OrderForm = () => {
                         <Checkbox
                           id="isUrgent"
                           checked={formData.isUrgent}
-                          onCheckedChange={(checked) => handleInputChange('isUrgent', checked)}
+                          onCheckedChange={(checked) => handleInputChange('isUrgent', !!checked)}
                         />
                         <Label htmlFor="isUrgent" className="text-red-600 font-medium">
                           Təcili çatdırılma (+3 AZN)
@@ -295,8 +291,8 @@ const OrderForm = () => {
                     </div>
                   </div>
 
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg font-semibold"
                   >
                     Sifariş Ver - {calculatedPrice > 0 ? `${calculatedPrice} AZN` : 'Qiymət hesablanır'}
@@ -306,8 +302,20 @@ const OrderForm = () => {
             </Card>
           </div>
 
-          {/* Qiymət cədvəli */}
+          {/* Qiymət və Əlaqə hissəsi */}
           <div>
+            <div className="mb-2 flex justify-end">
+                <a
+                href="/track"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-blue-600 text-white text-sm font-medium shadow hover:bg-green-700 transition"
+                >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+                Sifarişi izlə
+                </a>
+            </div>
             <Card className="shadow-lg">
               <CardHeader className="bg-green-600 text-white rounded-t-lg">
                 <CardTitle className="text-center">💰 Qiymət Cədvəli</CardTitle>
@@ -328,7 +336,7 @@ const OrderForm = () => {
                     </div>
                   ))}
                 </div>
-                
+
                 {formData.distance > 0 && (
                   <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                     <h4 className="font-semibold text-blue-800 mb-2">Sizin sifarişiniz:</h4>

@@ -1,0 +1,1 @@
+export const uri = 'mongodb+srv://football:football1@cluster0.kk1kc8e.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0';

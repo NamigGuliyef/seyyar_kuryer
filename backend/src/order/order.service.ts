@@ -8,24 +8,29 @@ import { CreateOrderDto } from './dto/create-order.dto';
 export class OrderService {
   constructor(
     @InjectModel(Order.name) private readonly ordermodel: Model<Order>,
-  ) { }
-
+  ) {}
 
   async create(createOrderDto: CreateOrderDto): Promise<Order> {
-    const lastOrderNo = await this.ordermodel.findOne().sort({ orderId: -1 }).exec();
-    const nextId = lastOrderNo && lastOrderNo.orderId
-      ? Number(lastOrderNo.orderId.replace('AZS000', '')) + 1
-      : 1;
+    const lastOrderNo = await this.ordermodel
+      .findOne()
+      .sort({ orderId: -1 })
+      .exec();
+    const nextId =
+      lastOrderNo && lastOrderNo.orderId
+        ? Number(lastOrderNo.orderId.replace('AZS000', '')) + 1
+        : 1;
     const generatedId = `AZS000${nextId}`;
     const createdOrder = new this.ordermodel({
       ...createOrderDto,
       orderId: generatedId,
-      price: this.calculatePrice(createOrderDto.distance, createOrderDto.isUrgent),
+      price: this.calculatePrice(
+        createOrderDto.distance,
+        createOrderDto.isUrgent,
+      ),
       status: 'new',
     });
     return createdOrder.save();
   }
-
 
   async findAll(): Promise<Order[]> {
     return this.ordermodel.find().sort({ createdAt: -1 }).exec();
@@ -47,5 +52,15 @@ export class OrderService {
     if (isUrgent) price += 3;
     return Math.round(price * 100) / 100;
   }
-}
 
+  // Status yeniləmə funksiyası
+  async updateStatus(orderId: string, status: string): Promise<Order> {
+    const updatedOrder = await this.ordermodel
+      .findOneAndUpdate({ orderId }, { status }, { new: true })
+      .exec();
+    if (!updatedOrder) {
+      throw new Error(`Order with ID ${orderId} not found`);
+    }
+    return updatedOrder;
+  }
+}

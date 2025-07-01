@@ -99,13 +99,58 @@ const OrderForm = () => {
     }
   };
 
+// ...existing code...
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-blue-900 mb-2">🚀 Seyyar Kuryer</h1>
-          <p className="text-blue-700">Sürətli və etibarlı çatdırılma xidməti</p>
+       <div className="text-center mb-4">
+   
+<h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-3">
+  <span>
+    <svg width="40" height="40" viewBox="0 0 32 32" fill="none">
+      <rect x="2" y="18" width="8" height="6" rx="3" fill="#2563eb"/>
+      <rect x="22" y="18" width="8" height="6" rx="3" fill="#2563eb"/>
+      <rect x="8" y="10" width="16" height="12" rx="3" fill="#60a5fa"/>
+      <rect x="12" y="5" width="8" height="6" rx="2" fill="#a5b4fc"/>
+      <circle cx="8" cy="27" r="3" fill="#1e293b"/>
+      <circle cx="24" cy="27" r="3" fill="#1e293b"/>
+      <path d="M16 13v-4" stroke="#1e293b" strokeWidth="2" strokeLinecap="round"/>
+      <path d="M30 24c-1.5-2-3-3-6-3H8c-3 0-4.5 1-6 3" stroke="#2563eb" strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M20 8l2-3" stroke="#2563eb" strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M12 8l-2-3" stroke="#2563eb" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  </span>
+  <span className="flex flex-col leading-tight">
+    <span>Səyyar</span>
+    <span className="text-blue-600 font-extrabold tracking-wide -mt-1">Kuryer</span>
+  </span>
+</h1>
+     {/* Navbar stilində butonlar */}
+          <nav className="flex justify-center gap-4 mt-4 mb-2 w-full">
+            <a
+              href="/"
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-md bg-gray-100 text-blue-700 text-base font-medium shadow hover:bg-gray-200 transition"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path d="M3 12l9-9 9 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M9 21V9h6v12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              Ana səhifə
+            </a>
+            <a
+              href="/track"
+              className="inline-flex items-center gap-2 px-5 py-2 rounded-md bg-blue-600 text-white text-base font-medium shadow hover:bg-green-700 transition"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
+                <line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+              Sifarişi izlə
+            </a>
+          </nav>
         </div>
+         
+    
 
         <div className="grid md:grid-cols-3 gap-6">
           <div className="md:col-span-2">
@@ -116,15 +161,15 @@ const OrderForm = () => {
                   Yeni Sifariş
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-6">
-                <form onSubmit={handleSubmit} className="space-y-6">
+              <CardContent className="p-4 sm:p-6">
+                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                   {/* Müştəri məlumatları */}
                   <div>
-                    <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-800 mb-4">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-800 mb-3 sm:mb-4">
                       <User className="w-5 h-5 text-blue-600" />
                       Müştəri Məlumatları
                     </h3>
-                    <div className="grid md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                       <div>
                         <Label htmlFor="firstName">Ad *</Label>
                         <Input
@@ -145,7 +190,7 @@ const OrderForm = () => {
                           className="mt-1"
                         />
                       </div>
-                      <div className="md:col-span-2">
+                      <div className="sm:col-span-2">
                         <Label htmlFor="phoneNumber">Əlaqə nömrəsi *</Label>
                         <Input
                           id="phoneNumber"
@@ -162,11 +207,11 @@ const OrderForm = () => {
 
                   {/* Bağlama məlumatları */}
                   <div>
-                    <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-800 mb-4">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-800 mb-3 sm:mb-4">
                       <Package className="w-5 h-5 text-blue-600" />
                       Bağlama / Sənəd Məlumatları
                     </h3>
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
                       <div>
                         <Label htmlFor="packageName">Bağlamanın adı *</Label>
                         <Input
@@ -177,7 +222,7 @@ const OrderForm = () => {
                           className="mt-1"
                         />
                       </div>
-                      <div className="grid md:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                         <div>
                           <Label htmlFor="packageCode">Nömrə / Kod</Label>
                           <Input
@@ -206,11 +251,11 @@ const OrderForm = () => {
 
                   {/* Ünvanlar */}
                   <div>
-                    <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-800 mb-4">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-800 mb-3 sm:mb-4">
                       <MapPin className="w-5 h-5 text-blue-600" />
                       Ünvanlar
                     </h3>
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
                       <div>
                         <Label htmlFor="pickupAddress">Götürüləcək ünvan *</Label>
                         <Textarea
@@ -252,11 +297,11 @@ const OrderForm = () => {
 
                   {/* Əlavə seçimlər */}
                   <div>
-                    <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-800 mb-4">
+                    <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-800 mb-3 sm:mb-4">
                       <Clock className="w-5 h-5 text-blue-600" />
                       Əlavə Seçimlər
                     </h3>
-                    <div className="space-y-4">
+                    <div className="space-y-3 sm:space-y-4">
                       <div className="flex items-center space-x-2">
                         <Checkbox
                           id="isUrgent"
@@ -304,18 +349,6 @@ const OrderForm = () => {
 
           {/* Qiymət və Əlaqə hissəsi */}
           <div>
-            <div className="mb-2 flex justify-end">
-                <a
-                href="/track"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-blue-600 text-white text-sm font-medium shadow hover:bg-green-700 transition"
-                >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
-                  <line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                </svg>
-                Sifarişi izlə
-                </a>
-            </div>
             <Card className="shadow-lg">
               <CardHeader className="bg-green-600 text-white rounded-t-lg">
                 <CardTitle className="text-center">💰 Qiymət Cədvəli</CardTitle>
@@ -373,6 +406,7 @@ const OrderForm = () => {
       </div>
     </div>
   );
+// ...existing code...
 };
 
 export default OrderForm;

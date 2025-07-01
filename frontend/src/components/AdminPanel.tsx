@@ -1,44 +1,85 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Package, MapPin, Phone, User, Clock, CheckCircle, Truck, AlertCircle, DollarSign } from 'lucide-react';
-import { Order } from '@/types/order';
+import { Separator } from '@/components/ui/separator';
 import { toast } from '@/hooks/use-toast';
+import { Order } from '@/types/order';
+import { AlertCircle, CheckCircle, Clock, DollarSign, MapPin, Package, Phone, Truck, User } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
+const API_URL = 'http://localhost:3000/order';
 
 const AdminPanel = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     loadOrders();
   }, []);
 
-  const loadOrders = () => {
-    const savedOrders = JSON.parse(localStorage.getItem('orders') || '[]');
-    setOrders(savedOrders);
+  // Bütün sifarişləri backend-dən yüklə
+  const loadOrders = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_URL}/all`);
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      setOrders(data);
+    } catch {
+      toast({
+        title: "Xəta",
+        description: "Sifarişləri yükləmək mümkün olmadı",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const updateOrderStatus = (orderId: string, newStatus: Order['status']) => {
-    const updatedOrders = orders.map(order => 
-      order.id === orderId 
-        ? { ...order, status: newStatus }
-        : order
-    );
-    
-    setOrders(updatedOrders);
-    localStorage.setItem('orders', JSON.stringify(updatedOrders));
-    
-    if (selectedOrder?.id === orderId) {
-      setSelectedOrder({ ...selectedOrder, status: newStatus });
+  // ID-yə görə sifariş detalları
+  const loadOrderById = async (id: string) => {
+    try {
+      const res = await fetch(`${API_URL}/track/${id}`);
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+      setSelectedOrder(data);
+    } catch {
+      toast({
+        title: "Xəta",
+        description: "Sifariş detalları tapılmadı",
+        variant: "destructive"
+      });
     }
+  };
 
-    toast({
-      title: "Status yeniləndi",
-      description: `Sifariş ${orderId} statusu "${getStatusText(newStatus)}" olaraq dəyişdirildi`
-    });
+  // Statusu backend-ə göndər və yenilə (orderId və status ilə)
+  const updateOrderStatus = async (orderId: string, newStatus: string) => {
+    try {
+      // Burada orderId MongoDB-də orderId kimi saxlanırsa, uyğun göndər
+      const res = await fetch(`${API_URL}/${orderId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (!res.ok) throw new Error();
+
+      toast({
+        title: "Status yeniləndi",
+        description: `Sifariş ${orderId} statusu "${getStatusText(newStatus as Order['status'])}" olaraq dəyişdirildi`
+      });
+
+      // Sifarişləri yenilə
+      loadOrders();
+      // Seçilmiş sifarişi yenilə
+      loadOrderById(orderId);
+    } catch {
+      toast({
+        title: "Xəta",
+        description: "Statusu yeniləmək mümkün olmadı",
+        variant: "destructive"
+      });
+    }
   };
 
   const getStatusText = (status: Order['status']) => {
@@ -161,7 +202,9 @@ const AdminPanel = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="p-0">
-                {orders.length === 0 ? (
+                {loading ? (
+                  <div className="p-8 text-center text-gray-500">Yüklənir...</div>
+                ) : orders.length === 0 ? (
                   <div className="p-8 text-center text-gray-500">
                     <Package className="w-12 h-12 mx-auto mb-4 opacity-50" />
                     <p>Hələ heç bir sifariş yoxdur</p>
@@ -181,17 +224,17 @@ const AdminPanel = () => {
                         </tr>
                       </thead>
                       <tbody>
-                        {orders.map((order, index) => (
+                        {orders.map((order) => (
                           <tr 
-                            key={order.id} 
+                            key={order.orderId || order.id} 
                             className={`border-b hover:bg-gray-50 cursor-pointer ${
-                              selectedOrder?.id === order.id ? 'bg-blue-50' : ''
+                              selectedOrder?.orderId === order.orderId ? 'bg-blue-50' : ''
                             }`}
-                            onClick={() => setSelectedOrder(order)}
+                            onClick={() => loadOrderById(order.orderId || order.id)}
                           >
                             <td className="px-4 py-3">
                               <div className="font-mono text-sm font-semibold text-blue-600">
-                                {order.id}
+                                {order.orderId || order.id}
                               </div>
                               {order.isUrgent && (
                                 <Badge variant="destructive" className="text-xs mt-1">
@@ -201,10 +244,10 @@ const AdminPanel = () => {
                             </td>
                             <td className="px-4 py-3">
                               <div className="font-semibold">
-                                {order.customer.firstName} {order.customer.lastName}
+                                {order.firstName} {order.lastName}
                               </div>
                               <div className="text-sm text-gray-600">
-                                {order.customer.phoneNumber}
+                                {order.phoneNumber}
                               </div>
                             </td>
                             <td className="px-4 py-3 text-center">
@@ -224,12 +267,12 @@ const AdminPanel = () => {
                               </Badge>
                             </td>
                             <td className="px-4 py-3 text-sm text-gray-600">
-                              {new Date(order.createdAt).toLocaleDateString('az')}
+                              {order.createdAt ? new Date(order.createdAt).toLocaleDateString('az') : ''}
                             </td>
                             <td className="px-4 py-3">
                               <Select
                                 value={order.status}
-                                onValueChange={(value) => updateOrderStatus(order.id, value as Order['status'])}
+                                onValueChange={(value) => updateOrderStatus(order.orderId || order.id, value)}
                               >
                                 <SelectTrigger className="w-32">
                                   <SelectValue />
@@ -266,7 +309,7 @@ const AdminPanel = () => {
                   <div className="space-y-4">
                     <div className="text-center pb-4 border-b">
                       <div className="text-2xl font-bold text-blue-600 mb-2">
-                        {selectedOrder.id}
+                        {selectedOrder.orderId || selectedOrder.id}
                       </div>
                       <Badge className={`${getStatusColor(selectedOrder.status)} text-white`}>
                         <span className="flex items-center gap-1">
@@ -283,11 +326,11 @@ const AdminPanel = () => {
                       </h4>
                       <div className="bg-gray-50 p-3 rounded-lg">
                         <div className="font-semibold">
-                          {selectedOrder.customer.firstName} {selectedOrder.customer.lastName}
+                          {selectedOrder.firstName} {selectedOrder.lastName}
                         </div>
                         <div className="flex items-center gap-1 text-gray-600">
                           <Phone className="w-4 h-4" />
-                          {selectedOrder.customer.phoneNumber}
+                          {selectedOrder.phoneNumber}
                         </div>
                       </div>
                     </div>
@@ -298,12 +341,12 @@ const AdminPanel = () => {
                         Bağlama
                       </h4>
                       <div className="bg-gray-50 p-3 rounded-lg">
-                        <div className="font-semibold">{selectedOrder.package.name}</div>
-                        {selectedOrder.package.code && (
-                          <div className="text-gray-600">Kod: {selectedOrder.package.code}</div>
+                        <div className="font-semibold">{selectedOrder.packageName}</div>
+                        {selectedOrder.packageCode && (
+                          <div className="text-gray-600">Kod: {selectedOrder.packageCode}</div>
                         )}
-                        {selectedOrder.package.size && (
-                          <div className="text-gray-600">Ölçü: {selectedOrder.package.size}</div>
+                        {selectedOrder.packageSize && (
+                          <div className="text-gray-600">Ölçü: {selectedOrder.packageSize}</div>
                         )}
                       </div>
                     </div>
@@ -315,12 +358,12 @@ const AdminPanel = () => {
                       </h4>
                       <div className="space-y-2">
                         <div className="bg-red-50 p-3 rounded-lg border-l-4 border-red-400">
-                          <div className="text-red-700 font-semibold text-sm mb-1">GÖTÜRÜLƏR:</div>
-                          <div className="text-gray-700">{selectedOrder.addresses.pickup}</div>
+                          <div className="text-red-700 font-semibold text-sm mb-1">Götürüləcək ünvan:</div>
+                          <div className="text-gray-700">{selectedOrder.pickupAddress}</div>
                         </div>
                         <div className="bg-green-50 p-3 rounded-lg border-l-4 border-green-400">
-                          <div className="text-green-700 font-semibold text-sm mb-1">ÇATDIRILIR:</div>
-                          <div className="text-gray-700">{selectedOrder.addresses.delivery}</div>
+                          <div className="text-green-700 font-semibold text-sm mb-1">Təhvil veriləcək ünvan:</div>
+                          <div className="text-gray-700">{selectedOrder.deliveryAddress}</div>
                         </div>
                       </div>
                     </div>
@@ -365,7 +408,7 @@ const AdminPanel = () => {
                       <h4 className="font-semibold text-gray-800 mb-3">Status Dəyişdir</h4>
                       <Select
                         value={selectedOrder.status}
-                        onValueChange={(value) => updateOrderStatus(selectedOrder.id, value as Order['status'])}
+                        onValueChange={(value) => updateOrderStatus(selectedOrder.orderId || selectedOrder.id, value)}
                       >
                         <SelectTrigger className="w-full">
                           <SelectValue />

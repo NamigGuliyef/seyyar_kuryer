@@ -91,7 +91,20 @@ const OrderTracking = () => {
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">📦 Sifariş İzləmə</h1>
-          <p className="text-gray-600">Sifariş nömrənizi daxil edərək statusunu yoxlayın</p>
+   
+       
+       {/* Sifariş ver butonu ən yuxarıda */}
+          <div className="flex justify-center gap-2 mt-6 mb-2 w-full max-w-md mx-auto">
+            <a
+              href="/order"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-blue-600 text-white text-sm font-medium shadow hover:bg-blue-700 transition w-full sm:w-auto justify-center"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path d="M12 4v16m8-8H4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              Sifariş ver
+            </a>
+          </div>
         </div>
 
         {/* Search */}
@@ -203,11 +216,11 @@ const OrderTracking = () => {
                 </h4>
                 <div className="space-y-3">
                   <div className="bg-red-50 p-4 rounded-lg border-l-4 border-red-400">
-                    <div className="text-red-700 font-semibold text-sm mb-1">Götürülən:</div>
+                    <div className="text-red-700 font-semibold text-sm mb-1">Götürüləcək ünvan:</div>
                     <div className="text-gray-700">{foundOrder.pickupAddress}</div>
                   </div>
                   <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
-                    <div className="text-green-700 font-semibold text-sm mb-1">Çatdırılan:</div>
+                    <div className="text-green-700 font-semibold text-sm mb-1">Təhvil veriləcək ünvan:</div>
                     <div className="text-gray-700">{foundOrder.deliveryAddress}</div>
                   </div>
                 </div>

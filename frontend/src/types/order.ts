@@ -1,4 +1,3 @@
-
 export interface Order {
   id: string;
   firstName: string;
@@ -14,8 +13,7 @@ export interface Order {
   isUrgent: boolean;
   deliveryTime?: string;
   notes?: string;
-  status: 'new' | 'accepted' | 'in_transit' | 'delivered';
-   orderId: string;
+  status: "new" | "accepted" | "in_transit" | "delivered";
+  orderId: string;
   createdAt: Date;
 }
-

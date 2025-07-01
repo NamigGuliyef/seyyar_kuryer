@@ -11,7 +11,28 @@ const Index = () => {
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-gray-900">🚛 Seyyar Kuryer</h1>
+           
+<h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-3">
+  <span>
+    <svg width="40" height="40" viewBox="0 0 32 32" fill="none">
+      <rect x="2" y="18" width="8" height="6" rx="3" fill="#2563eb"/>
+      <rect x="22" y="18" width="8" height="6" rx="3" fill="#2563eb"/>
+      <rect x="8" y="10" width="16" height="12" rx="3" fill="#60a5fa"/>
+      <rect x="12" y="5" width="8" height="6" rx="2" fill="#a5b4fc"/>
+      <circle cx="8" cy="27" r="3" fill="#1e293b"/>
+      <circle cx="24" cy="27" r="3" fill="#1e293b"/>
+      <path d="M16 13v-4" stroke="#1e293b" strokeWidth="2" strokeLinecap="round"/>
+      <path d="M30 24c-1.5-2-3-3-6-3H8c-3 0-4.5 1-6 3" stroke="#2563eb" strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M20 8l2-3" stroke="#2563eb" strokeWidth="1.5" strokeLinecap="round"/>
+      <path d="M12 8l-2-3" stroke="#2563eb" strokeWidth="1.5" strokeLinecap="round"/>
+    </svg>
+  </span>
+  <span className="flex flex-col leading-tight">
+    <span>Səyyar</span>
+    <span className="text-blue-600 font-extrabold tracking-wide -mt-1">Kuryer</span>
+  </span>
+</h1>
+
             <nav className="flex gap-4">
               <Button asChild variant="outline">
                 <Link to="/track">📦 Sifariş İzlə</Link>
@@ -149,7 +170,7 @@ const Index = () => {
       <footer className="bg-gray-900 text-white py-8 px-4">
         <div className="max-w-6xl mx-auto text-center">
           <p className="text-gray-400">
-            © 2024 Seyyar Kuryer. Bütün hüquqlar qorunur.
+            © 2025 Seyyar Kuryer. Bütün hüquqlar qorunur.
           </p>
         </div>
       </footer>

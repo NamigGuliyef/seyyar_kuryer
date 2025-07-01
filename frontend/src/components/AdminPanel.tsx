@@ -94,10 +94,10 @@ const AdminPanel = () => {
 
   const getStatusColor = (status: Order['status']) => {
     switch (status) {
-      case 'new': return 'bg-blue-500';
+      case 'new': return 'bg-green-500';
       case 'accepted': return 'bg-yellow-500';
       case 'in_transit': return 'bg-orange-500';
-      case 'delivered': return 'bg-green-500';
+      case 'delivered': return 'bg-blue-500';
       default: return 'bg-gray-500';
     }
   };
@@ -130,14 +130,14 @@ const AdminPanel = () => {
 
         {/* Statistika kartları */}
         <div className="grid md:grid-cols-5 gap-4 mb-8">
-          <Card className="bg-blue-600 text-white">
+          <Card className="bg-green-600 text-white">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-blue-100">Yeni Sifarişlər</p>
+                  <p className="text-green-100">Yeni Sifarişlər</p>
                   <p className="text-2xl font-bold">{newOrders.length}</p>
                 </div>
-                <AlertCircle className="w-8 h-8 text-blue-200" />
+                <AlertCircle className="w-8 h-8 text-green-200" />
               </div>
             </CardContent>
           </Card>
@@ -154,14 +154,14 @@ const AdminPanel = () => {
             </CardContent>
           </Card>
           
-          <Card className="bg-green-600 text-white">
+          <Card className="bg-blue-600 text-white">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-green-100">Tamamlanan</p>
+                  <p className="text-blue-100">Tamamlanan</p>
                   <p className="text-2xl font-bold">{deliveredOrders.length}</p>
                 </div>
-                <CheckCircle className="w-8 h-8 text-green-200" />
+                <CheckCircle className="w-8 h-8 text-blue-200" />
               </div>
             </CardContent>
           </Card>

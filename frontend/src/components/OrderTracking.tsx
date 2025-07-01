@@ -68,10 +68,10 @@ const OrderTracking = () => {
 
   const getStatusColor = (status: Order['status']) => {
     switch (status) {
-      case 'new': return 'bg-blue-500';
+      case 'new': return 'bg-green-500';
       case 'accepted': return 'bg-yellow-500';
       case 'in_transit': return 'bg-orange-500';
-      case 'delivered': return 'bg-green-500';
+      case 'delivered': return 'bg-blue-500';
       default: return 'bg-gray-500';
     }
   };

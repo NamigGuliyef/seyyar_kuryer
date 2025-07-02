@@ -7,7 +7,7 @@ import { Order } from '@/types/order';
 import { AlertCircle, CheckCircle, Clock, DollarSign, MapPin, Package, Phone, Truck, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
-const API_URL = 'http://localhost:3000/order';
+export const API_URL = 'https://seyyar-kuryer.vercel.app';
 
 const AdminPanel = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -22,7 +22,7 @@ const AdminPanel = () => {
   const loadOrders = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/all`);
+      const res = await fetch(`${API_URL}/order/all`);
       if (!res.ok) throw new Error();
       const data = await res.json();
       setOrders(data);
@@ -40,7 +40,7 @@ const AdminPanel = () => {
   // ID-yə görə sifariş detalları
   const loadOrderById = async (id: string) => {
     try {
-      const res = await fetch(`${API_URL}/track/${id}`);
+      const res = await fetch(`${API_URL}/order/track/${id}`);
       if (!res.ok) throw new Error();
       const data = await res.json();
       setSelectedOrder(data);
@@ -57,7 +57,7 @@ const AdminPanel = () => {
   const updateOrderStatus = async (orderId: string, newStatus: string) => {
     try {
       // Burada orderId MongoDB-də orderId kimi saxlanırsa, uyğun göndər
-      const res = await fetch(`${API_URL}/${orderId}`, {
+      const res = await fetch(`${API_URL}/order/${orderId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),

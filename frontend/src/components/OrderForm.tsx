@@ -11,6 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { Package, MapPin, Phone, User, Clock } from 'lucide-react';
 import { calculatePrice, priceRanges } from '@/utils/priceCalculator';
 import { toast } from '@/hooks/use-toast';
+import { API_URL } from './AdminPanel';
 
 const OrderForm = () => {
   const [formData, setFormData] = useState({
@@ -53,7 +54,7 @@ const OrderForm = () => {
     }
 
     try {
-      const res = await fetch('http://localhost:3000/order/create', {
+      const res = await fetch(`${API_URL}/order/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -196,7 +197,7 @@ const OrderForm = () => {
                           id="phoneNumber"
                           value={formData.phoneNumber}
                           onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
-                          placeholder="055 xxx xx xx"
+                          placeholder="055 245 99 55"
                           className="mt-1"
                         />
                       </div>
@@ -309,7 +310,7 @@ const OrderForm = () => {
                           onCheckedChange={(checked) => handleInputChange('isUrgent', !!checked)}
                         />
                         <Label htmlFor="isUrgent" className="text-red-600 font-medium">
-                          Təcili çatdırılma (+3 AZN)
+                          Təcili çatdırılma (+2 AZN)
                         </Label>
                       </div>
                       <div>
@@ -393,7 +394,7 @@ const OrderForm = () => {
                 <div className="space-y-2">
                   <div className="flex items-center justify-center gap-2">
                     <Phone className="w-4 h-4 text-purple-600" />
-                    <span className="font-semibold">+994 XX XXX XX XX</span>
+                    <span className="font-semibold">+994 55 245 99 55</span>
                   </div>
                   <div className="text-sm text-gray-600">
                     WhatsApp və ya zəng üçün

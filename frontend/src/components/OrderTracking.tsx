@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Search, Package, MapPin, Phone, User, Clock, CheckCircle, Truck, AlertCircle } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import { Order } from '@/types/order';
+import { API_URL } from './AdminPanel';
 
 const OrderTracking = () => {
   const [orderId, setOrderId] = useState('');
@@ -28,7 +29,7 @@ const OrderTracking = () => {
     setIsSearching(true);
 
     try {
-      const res = await fetch(`http://localhost:3000/order/track/${orderId}`, {
+      const res = await fetch(`${API_URL}/order/track/${orderId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

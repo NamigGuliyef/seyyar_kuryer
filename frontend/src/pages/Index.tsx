@@ -134,29 +134,29 @@ const Index = () => {
                     <tr>
                       <th className="px-6 py-4 text-left font-semibold text-gray-900">Məsafə</th>
                       <th className="px-6 py-4 text-center font-semibold text-gray-900">Adi Qiymət</th>
-                      <th className="px-6 py-4 text-center font-semibold text-gray-900">Təcili (+3 AZN)</th>
+                      <th className="px-6 py-4 text-center font-semibold text-gray-900">Təcili (+2 AZN)</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr className="border-b">
                       <td className="px-6 py-4 font-medium">0 - 2 km</td>
                       <td className="px-6 py-4 text-center text-green-600 font-bold">3 AZN</td>
-                      <td className="px-6 py-4 text-center text-orange-600 font-bold">6 AZN</td>
+                      <td className="px-6 py-4 text-center text-orange-600 font-bold">5 AZN</td>
                     </tr>
                     <tr className="border-b">
                       <td className="px-6 py-4 font-medium">2 - 5 km</td>
-                      <td className="px-6 py-4 text-center text-green-600 font-bold">5 AZN</td>
-                      <td className="px-6 py-4 text-center text-orange-600 font-bold">8 AZN</td>
+                      <td className="px-6 py-4 text-center text-green-600 font-bold">4 AZN</td>
+                      <td className="px-6 py-4 text-center text-orange-600 font-bold">6 AZN</td>
                     </tr>
                     <tr className="border-b">
                       <td className="px-6 py-4 font-medium">5 - 10 km</td>
-                      <td className="px-6 py-4 text-center text-green-600 font-bold">8 AZN</td>
-                      <td className="px-6 py-4 text-center text-orange-600 font-bold">11 AZN</td>
+                      <td className="px-6 py-4 text-center text-green-600 font-bold">6 AZN</td>
+                      <td className="px-6 py-4 text-center text-orange-600 font-bold">8 AZN</td>
                     </tr>
                     <tr>
                       <td className="px-6 py-4 font-medium">10+ km</td>
-                      <td className="px-6 py-4 text-center text-green-600 font-bold">12 AZN</td>
-                      <td className="px-6 py-4 text-center text-orange-600 font-bold">15 AZN</td>
+                      <td className="px-6 py-4 text-center text-green-600 font-bold">8 AZN</td>
+                      <td className="px-6 py-4 text-center text-orange-600 font-bold">10 AZN</td>
                     </tr>
                   </tbody>
                 </table>

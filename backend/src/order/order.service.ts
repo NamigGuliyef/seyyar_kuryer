@@ -45,11 +45,11 @@ export class OrderService {
     let price = 0;
 
     if (distance <= 2) price = 3;
-    else if (distance <= 5) price = 5;
-    else if (distance <= 10) price = 8;
-    else price = 12 + (distance - 10) * 0.5;
+    else if (distance <= 5) price = 4;
+    else if (distance <= 10) price = 6;
+    else price = 8 + (distance - 10) * 0.5;
 
-    if (isUrgent) price += 3;
+    if (isUrgent) price += 2; // Təcili çatdırılma üçün əlavə 2 AZN
     return Math.round(price * 100) / 100;
   }
 
